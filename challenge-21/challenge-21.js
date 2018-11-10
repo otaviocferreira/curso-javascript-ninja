@@ -14,4 +14,58 @@ Utilize o atributo data-js para nomear o campo e os botões. Você pode
 usar o nome que achar melhor, desde que ele seja semântico, ou seja, o nome
 dado ao elemento HTML deve definir o que o elemento é ou o que ele faz.
 */
-// ?
+
+(function(win, doc) {
+    var $campoRelogio = doc.querySelector("[data-js='relogio']");
+    var $buttonStart = doc.querySelector("[data-js='start']");
+    var $buttonStop = doc.querySelector("[data-js='stop']");
+    var $buttonReset = doc.querySelector("[data-js='reset']");
+
+    var cronometro = 0;
+    var temporizador;
+
+    $buttonStart.addEventListener("click", startCronometro);
+    $buttonStop.addEventListener("click", stopCronometro);
+    $buttonReset.addEventListener("click", resetCronometro);
+
+    var seg = min = hora = "00";
+    var cronHora = 0;
+    var cronMin = 0;
+
+    function timer() {
+        cronometro++;        
+
+        if (cronometro === 60)  {
+            seg = "00";
+            cronometro = 0;
+            cronMin++;
+
+            if (cronMin === 60) {
+                min = "00";
+                cronMin = 0;
+                cronHora++;
+            }
+        }
+
+        seg = cronometro < 10 ? "0" + cronometro : cronometro;
+        min = cronMin < 10 ? "0" + cronMin : cronMin;
+        hora = cronHora < 10 ? "0" + cronHora : cronHora;
+
+        $campoRelogio.value = hora + ":" + min + ":" + seg;
+    }
+
+    function startCronometro() {
+        temporizador = setInterval(timer, 1000);
+    }
+    
+    function stopCronometro() {
+        clearInterval(temporizador);
+    }
+    
+    function resetCronometro() {
+        $campoRelogio.value = "00:00:00";
+        cronometro = 0;
+        cronMin = 0;
+        cronHora = 0;
+    }
+})(window, document);
